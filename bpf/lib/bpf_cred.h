@@ -69,4 +69,27 @@ struct msg_cred_minimal {
 	__u32 pad;
 } __attribute__((packed));
 
+/*
+ * Check if "a" is a subset of "set".
+ * return true if all of the capabilities in "a" are also in "set"
+ *	__cap_issubset(0100, 1111) will return true
+ * return false if any of the capabilities in "a" are not in "set"
+ *	__cap_issubset(1111, 0100) will return false
+ */
+static inline __attribute__((always_inline)) bool
+__cap_issubset(const __u64 a, const __u64 set)
+{
+	return !(a & ~set);
+}
+
+#define __cap_gained(target, source) \
+	!__cap_issubset(target, source)
+
+/* Right now we operate on global uids, we don't do user namespace translation. */
+static inline __attribute__((always_inline)) bool
+uid_eq(__u32 left, __u32 right)
+{
+	return left == right;
+}
+
 #endif

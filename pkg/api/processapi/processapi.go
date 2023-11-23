@@ -32,8 +32,9 @@ const (
 	MsgUnixSize uint32 = 640
 
 	/* Execve extra flags */
-	ExecveSetuid = 0x01
-	ExecveSetgid = 0x02
+	ExecveSetuid  = 0x01
+	ExecveSetgid  = 0x02
+	ExecveBinCaps = 0x04 // This binary execution gained new capabilities through suid setuid or file capabilities execution
 
 	// flags of MsgCommon
 	MSG_COMMON_FLAG_RETURN     = 0x1

@@ -179,6 +179,10 @@ func (pi *ProcessInternal) UpdateExecOutsideCache(cred bool) (*tetragon.Process,
 			prop.Setgid = pi.apiBinaryProp.Setgid
 			update = true
 		}
+		if pi.apiBinaryProp.CapsRaised {
+			prop.CapsRaised = true
+			update = true
+		}
 	}
 
 	// Take a copy of the process, add the necessary fields to the
@@ -307,6 +311,9 @@ func initProcessInternalExec(
 	}
 	if (process.SecureExec & tetragonAPI.ExecveSetgid) != 0 {
 		apiBinaryProp.Setgid = &wrapperspb.UInt32Value{Value: creds.Egid}
+	}
+	if (process.SecureExec & tetragonAPI.ExecveBinCaps) != 0 {
+		apiBinaryProp.CapsRaised = true
 	}
 
 	// Per thread tracking rules PID == TID
