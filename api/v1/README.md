@@ -206,6 +206,7 @@
 | ----- | ---- | ----- | ----------- |
 | setuid | [google.protobuf.UInt32Value](#google-protobuf-UInt32Value) |  | If set then this is the set user ID used for execution |
 | setgid | [google.protobuf.UInt32Value](#google-protobuf-UInt32Value) |  | If set then this is the set group ID used for execution |
+| caps_raised | [bool](#bool) |  | If set then the execution of this binary gained new privileges by raising the permitted and effective capabilities. This happens when the process executes a binary with setuid root bit set or file capabilities. The final ganted capabilities are listed in the capabilities field of the process execution. |
 
 
 

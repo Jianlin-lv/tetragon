@@ -2975,8 +2975,9 @@ nextCheck:
 
 // BinaryPropertiesChecker implements a checker struct to check a BinaryProperties field
 type BinaryPropertiesChecker struct {
-	Setuid *uint32 `json:"setuid,omitempty"`
-	Setgid *uint32 `json:"setgid,omitempty"`
+	Setuid     *uint32 `json:"setuid,omitempty"`
+	Setgid     *uint32 `json:"setgid,omitempty"`
+	CapsRaised *bool   `json:"capsRaised,omitempty"`
 }
 
 // NewBinaryPropertiesChecker creates a new BinaryPropertiesChecker
@@ -3012,6 +3013,11 @@ func (checker *BinaryPropertiesChecker) Check(event *tetragon.BinaryProperties) 
 				return fmt.Errorf("Setgid has value %v which does not match expected value %v", event.Setgid.Value, *checker.Setgid)
 			}
 		}
+		if checker.CapsRaised != nil {
+			if *checker.CapsRaised != event.CapsRaised {
+				return fmt.Errorf("CapsRaised has value %t which does not match expected value %t", event.CapsRaised, *checker.CapsRaised)
+			}
+		}
 		return nil
 	}
 	if err := fieldChecks(); err != nil {
@@ -3032,6 +3038,12 @@ func (checker *BinaryPropertiesChecker) WithSetgid(check uint32) *BinaryProperti
 	return checker
 }
 
+// WithCapsRaised adds a CapsRaised check to the BinaryPropertiesChecker
+func (checker *BinaryPropertiesChecker) WithCapsRaised(check bool) *BinaryPropertiesChecker {
+	checker.CapsRaised = &check
+	return checker
+}
+
 //FromBinaryProperties populates the BinaryPropertiesChecker using data from a BinaryProperties field
 func (checker *BinaryPropertiesChecker) FromBinaryProperties(event *tetragon.BinaryProperties) *BinaryPropertiesChecker {
 	if event == nil {
@@ -3044,6 +3056,10 @@ func (checker *BinaryPropertiesChecker) FromBinaryProperties(event *tetragon.Bin
 	if event.Setgid != nil {
 		val := event.Setgid.Value
 		checker.Setgid = &val
+	}
+	{
+		val := event.CapsRaised
+		checker.CapsRaised = &val
 	}
 	return checker
 }
