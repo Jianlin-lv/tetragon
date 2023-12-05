@@ -22,7 +22,7 @@ FROM --platform=$BUILDPLATFORM docker.io/library/golang:1.21.4@sha256:9baee0edab
 WORKDIR /go/src/github.com/cilium/tetragon
 ARG TETRAGON_VERSION TARGETARCH
 COPY . .
-RUN make VERSION=$TETRAGON_VERSION TARGET_ARCH=$TARGETARCH tetragon tetra
+RUN make VERSION=$TETRAGON_VERSION TARGET_ARCH=$TARGETARCH tetragon tetra tetragon-oci-hook tetragon-oci-hook-setup
 
 # Third builder (cross-)compile a stripped gops
 FROM --platform=$BUILDPLATFORM docker.io/library/golang:1.21.4-alpine@sha256:70afe55365a265f0762257550bc38440e0d6d6b97020d3f8c85328f00200dd8e as gops
@@ -76,6 +76,8 @@ RUN mkdir /var/lib/tetragon/ && \
     apk add --no-cache --update bash
 COPY --from=tetragon-builder /go/src/github.com/cilium/tetragon/tetragon /usr/bin/
 COPY --from=tetragon-builder /go/src/github.com/cilium/tetragon/tetra /usr/bin/
+COPY --from=tetragon-builder /go/src/github.com/cilium/tetragon/contrib/rthooks/tetragon-oci-hook/tetragon-oci-hook /usr/bin/
+COPY --from=tetragon-builder /go/src/github.com/cilium/tetragon/contrib/rthooks/tetragon-oci-hook/tetragon-oci-hook-setup /usr/bin/
 COPY --from=gops /gops/gops /usr/bin/
 COPY --from=bpf-builder /go/src/github.com/cilium/tetragon/bpf/objs/*.o /var/lib/tetragon/
 ENTRYPOINT ["/usr/bin/tetragon"]
