@@ -63,6 +63,9 @@ Helm chart for Tetragon
 | tetragon.image.override | string | `nil` |  |
 | tetragon.image.repository | string | `"quay.io/cilium/tetragon"` |  |
 | tetragon.image.tag | string | `"v1.0.0"` |  |
+| tetragon.ociHookSetup | object | `{"enabled":false,"installDir":"/opt/tetragon","interface":"oci-hooks"}` | Configure tetragon's init container for setting up tetragon-oci-hook on the host |
+| tetragon.ociHookSetup.enabled | bool | `false` | enable  init container to setup tetragon-oci-hook |
+| tetragon.ociHookSetup.interface | string | `"oci-hooks"` | interface specifices how the hook is  configured. There is only one avaialble value for now: "oci-hooks" (https://github.com/containers/common/blob/main/pkg/hooks/docs/oci-hooks.5.md). |
 | tetragon.processCacheSize | int | `65536` |  |
 | tetragon.prometheus.address | string | `""` | The address at which to expose metrics. Set it to "" to expose on all available interfaces. |
 | tetragon.prometheus.enabled | bool | `true` | Whether to enable exposing Tetragon metrics. |
