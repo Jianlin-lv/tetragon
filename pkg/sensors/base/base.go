@@ -28,8 +28,8 @@ var (
 
 	Exit = program.Builder(
 		"bpf_exit.o",
-		"acct_process",
-		"kprobe/acct_process",
+		"disassociate_ctty",
+		"kprobe/disassociate_ctty",
 		"event_exit",
 		"kprobe",
 	)

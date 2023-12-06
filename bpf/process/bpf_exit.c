@@ -42,11 +42,12 @@ char _license[] __attribute__((section("license"), used)) = "Dual BSD/GPL";
  * Hooking to acct_process we ensure tsk->signal->live is 0 and
  * we are the last one of the thread group.
  */
-__attribute__((section("kprobe/acct_process"), used)) int
+__attribute__((section("kprobe/disassociate_ctty"), used)) int
 event_exit(struct pt_regs *ctx)
 {
-	__u64 pid_tgid = get_current_pid_tgid();
+	int on_exit = (int)PT_REGS_PARM1_CORE(ctx);
 
-	event_exit_send(ctx, pid_tgid >> 32);
+	if (on_exit)
+		event_exit_send(ctx, get_current_pid_tgid() >> 32);
 	return 0;
 }
